@@ -1,0 +1,76 @@
+#
+# New Relic infrastructure agent configuration file
+#
+# This file overrides the agent defaults. Lines that begin with # are comments,
+# which are ignored by the infrastructure agent. Uncomment the desired options
+# to enable them. Restart the agent or the server after changing settings.
+#
+# To use this file, change its name to newrelic-infra.yml and move it to:
+#    - Linux: /etc/newrelic-infra.yml
+#    - Windows: C:\Program Files\New Relic\newrelic-infra\newrelic-infra.yml
+#
+# The infrastructure agent only requires the license key to be
+# configured; the rest of the default values represent best practices.
+#
+# If options have command line equivalents, New Relic uses the command line
+# options to override values set in this file.
+#
+# Environment variables (documented here as "Env var") always override the
+# values set in the configuration file. We recommend setting any sensitive
+# information through environment variables.
+#
+# For more information on each setting, see https://docs.newrelic.com/docs/infrastructure/install-configure-manage-infrastructure/configuration/infrastructure-configuration-settings
+#
+
+#
+# Option : license_key
+# Value  : 40-character hexadecimal string provided by New Relic. This is the
+#          only required value in your config file.
+# Default: none
+#
+license_key: {{NRIA_LICENSE_KEY}}
+
+#
+# New Relic Integrations
+#
+integrations:
+  - name: nri-mysql
+    env:
+      HOSTNAME: {{MYSQL_HOST}}
+      PORT: {{MYSQL_PORT}}
+      # ENABLE_TLS: false
+      # INSECURE_SKIP_VERIFY: false
+      # Specify extra connection parameters as attr1=val1&attr2=val2.
+      # EXTRA_CONNECTION_URL_ARGS: ""
+
+      # If not empty `socket` parameter will discard `port` parameter
+      #SOCKET: <PATH_TO_LOCAL_SOCKET_FILE_NAME>
+
+      USERNAME: {{MYSQL_USER}}
+      PASSWORD: {{MYSQL_PASSWORD}}
+      # Allow old password https://dev.mysql.com/doc/refman/5.6/en/server-system-variables.html#sysvar_old_passwords
+      # OLD_PASSWORDS: false
+
+      # Name of the database to be monitored
+      # DATABASE: ""
+
+      # Enable extended metrics
+      # EXTENDED_METRICS: false
+
+      # Enable additional metrics
+      # EXTENDED_INNODB_METRICS: false
+      # EXTENDED_MY_ISAM_METRICS: false
+
+      # New users should leave this property as `true`, to identify the
+      # monitored entities as `remote`. Setting this property to `false` (the
+      # default value) is deprecated and will be removed soon, disallowing
+      # entities that are identified as `local`.
+      # Please check the documentation to get more information about local
+      # versus remote entities:
+      # https://github.com/newrelic/infra-integrations-sdk/blob/master/docs/entity-definition.md
+      REMOTE_MONITORING: true
+    interval: 30s
+    labels:
+      #env: production
+      #role: write-replica
+    inventory_source: config/mysql
